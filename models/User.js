@@ -11,14 +11,26 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        required: true
+        required: true,
+        validate: {
+            validator: function (v) {
+                var re = /^\d{10}$/;
+                return (!v || !v.trim().length) || re.test(v);
+            },
+            message: 'Provided phone number is invalid.'
+        }
     },
     email: {
         type: String,
         required: true
     },
     role: {
-
+        type: String,
+        enum: {
+            values: ['user', 'admin'],
+            message: '{VALUE} is not supported'
+        },
+        default: 'user'
     }
 });
 
