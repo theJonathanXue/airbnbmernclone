@@ -16,7 +16,7 @@ const listingSchema = new mongoose.Schema({
     bookings: [{
         type: mongoose.Schema.Types.ObjectId,
         required: false,
-        ref: Booking
+        ref: 'Booking'
     }],
     price: {
         type: Number,
@@ -25,7 +25,7 @@ const listingSchema = new mongoose.Schema({
     lister: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: User
+        ref: 'User'
     }
 });
 

@@ -11,14 +11,7 @@ const userSchema = new mongoose.Schema({
     },
     phoneNumber: {
         type: String,
-        required: true,
-        validate: {
-            validator: function (v) {
-                var re = /^\d{10}$/;
-                return (!v || !v.trim().length) || re.test(v);
-            },
-            message: 'Provided phone number is invalid.'
-        }
+        required: true
     },
     email: {
         type: String,

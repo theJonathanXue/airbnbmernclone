@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const listingSchema = new mongoose.Schema({
+const bookingSchema = new mongoose.Schema({
     startDate: {
         type: Date,
         required: true
@@ -29,4 +29,4 @@ const listingSchema = new mongoose.Schema({
     }
 });
 
-module.exports = mongoose.model('Listing', listingSchema);
+module.exports = mongoose.model('Booking', bookingSchema);

@@ -1,13 +1,14 @@
 const User = require('../models/User');
 const Listing = require('../models/Listing');
 const Booking = require('../models/Booking');
+// use asyncHandler to eliminate writing try and catch statements
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 
 // Get all users
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-password').lean();
-    if (!users.length) {
+    if (!users?.length) {
         return res.status(400).json({ message: 'No users found' });
     }
     res.json(users);
@@ -25,7 +26,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     // Check for duplicate
     const duplicate = await User.findOne({ email }).lean().exec();
     if (duplicate) {
-        return res.status(409).json({ message: 'Duplicate username' });
+        return res.status(409).json({ message: 'Duplicate email' });
     }
 
     // Hash password
@@ -39,7 +40,7 @@ const createNewUser = asyncHandler(async (req, res) => {
     const user = await User.create(userObject);
 
     if (user) {
-        res.status(201).json({ message: `New user ${username} created` });
+        res.status(201).json({ message: `New user ${email} created` });
     } else {
         res.status(400).json({ message: 'Invalid user data received' });
     }
@@ -50,8 +51,8 @@ const updateUser = asyncHandler(async (req, res) => {
     const { id, firstName, lastName, phoneNumber, email, password, role } = req.body;
 
     // Check data is present
-    if (!id || !firstName || !lastName || !phoneNumber || !email || !password || !role) {
-        return res.status(400).json({ message: 'All fields are required' });
+    if (!id || !firstName || !lastName || !phoneNumber || !email || !role) {
+        return res.status(400).json({ message: 'All fields execept password are required' });
     }
 
     const user = await User.findById(id).exec();
@@ -80,7 +81,7 @@ const updateUser = asyncHandler(async (req, res) => {
 
     const updatedUser = await user.save();
 
-    res.json({ message: `${updateduser.email} updated` });
+    res.json({ message: `${updatedUser.email} updated` });
 });
 
 // delete user
@@ -101,7 +102,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     const user = await User.findById(id).exec();
 
     if (!user) {
-        return res.status(400).json({ message: 'user not found' });
+        return res.status(400).json({ message: 'User not found' });
     }
 
     const result = await user.deleteOne();

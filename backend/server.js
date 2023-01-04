@@ -4,16 +4,21 @@ const app = express();
 const path = require('path');
 const PORT = process.env.PORT || 3500;
 const connectDB = require('./config/dbConn');
+const cors = require('cors');
+const corsOptions = require('./config/corsOptions');
+const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
 connectDB();
 
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/root'));
-
+app.use('/auth', require('./routes/authRoutes'));
 app.use('/users', require('./routes/userRoutes'));
 
 app.all('*', (req, res) => {
