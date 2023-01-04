@@ -1,26 +1,32 @@
-import { useState } from "react";
+import React, { useState } from 'react';
 import {
     IconButton,
     InputBase,
     Typography,
-    Select,
+    Box,
     MenuItem,
-    FormControl,
-    useMediaQuery,
+    Tooltip,
+    Menu
 } from "@mui/material";
 import {
     Search,
-    Language
+    Language,
+    AccountCircle,
+    Menu as MenuIcon
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "./FlexBetweenBox";
 
 const Navbar = () => {
-    const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
     const navigate = useNavigate();
-    const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-
-    let fullName = "John Smith";
+    const [anchorEl, setAnchorEl] = useState(null);
+    const open = Boolean(anchorEl);
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     return (
         <FlexBetween padding="1rem 6%" sx={{ borderBottom: 1, borderBottomColor: '#D3D3D3' }}>
@@ -29,7 +35,7 @@ const Navbar = () => {
                     fontWeight="bold"
                     fontSize="clamp(1rem, 2rem, 2.25rem)"
                     color="#ff385c"
-                    onClick={() => navigate("/home")}
+                    onClick={() => navigate("/")}
                 >
                     Airbnb Clone
                 </Typography>
@@ -46,32 +52,61 @@ const Navbar = () => {
                 </FlexBetween>
             </FlexBetween>
             <FlexBetween gap="1rem">
-                <Typography>{'Airbnb your home'}</Typography>
-                <Language sx={{ fontSize: "25px" }} />
-                <FormControl variant="standard" value={fullName}>
-                    <Select
-                        value={fullName}
-                        sx={{
-                            backgroundColor: '#D3D3D3',
-                            width: "150px",
-                            borderRadius: "0.25rem",
-                            p: "0.25rem 1rem",
-                            "& .MuiSvgIcon-root": {
-                                pr: "0.25rem",
-                                width: "3rem",
-                            },
-                            "& .MuiSelect-select:focus": {
-                                backgroundColor: '#D3D3D3',
+                <Typography onClick={() => navigate("/newlisting")}>{'Airbnb your home'}</Typography>
+                <Language />
+                <>
+                    <Box >
+                        <Tooltip title="Account settings">
+                            <IconButton
+                                onClick={handleClick}
+                                size="small"
+                                aria-controls={open ? 'account-menu' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                    <Menu
+                        anchorEl={anchorEl}
+                        id="account-menu"
+                        open={open}
+                        onClose={handleClose}
+                        onClick={handleClose}
+                        PaperProps={{
+                            elevation: 0,
+                            sx: {
+                                overflow: 'visible',
+                                filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                mt: 1.5,
+                                '& .MuiAvatar-root': {
+                                    width: 32,
+                                    height: 32,
+                                    ml: -0.5,
+                                    mr: 1,
+                                },
+                                '&:before': {
+                                    content: '""',
+                                    display: 'block',
+                                    position: 'absolute',
+                                    top: 0,
+                                    right: 14,
+                                    width: 10,
+                                    height: 10,
+                                    bgcolor: 'background.paper',
+                                    transform: 'translateY(-50%) rotate(45deg)',
+                                    zIndex: 0,
+                                },
                             },
                         }}
-                        input={<InputBase />}
+                        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
                     >
-                        <MenuItem value={fullName}>
-                            <Typography>{fullName}</Typography>
-                        </MenuItem>
-                        <MenuItem >Log Out</MenuItem>
-                    </Select>
-                </FormControl>
+                        <MenuItem onClick={() => navigate("/signup")} >Sign up</MenuItem>
+                        <MenuItem onClick={() => navigate("/login")}>Log In</MenuItem>
+                    </Menu>
+                </>
             </FlexBetween>
 
         </FlexBetween >
